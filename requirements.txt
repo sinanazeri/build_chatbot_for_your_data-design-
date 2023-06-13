@@ -1,0 +1,8 @@
+Flask
+Flask_Cors
+langchain
+openai
+pdf2image
+tiktoken
+chromadb
+pypdf
