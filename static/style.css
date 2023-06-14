@@ -12,7 +12,7 @@ body {
 
 #chat-window {
   position: relative;
-  height: 500px;
+  height: 70vh;
   overflow: auto;
 }
 

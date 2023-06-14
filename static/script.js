@@ -4,7 +4,7 @@ let recording = false;
 const responses = [];
 const botRepeatButtonIDToIndexMap = {};
 const userRepeatButtonIDToRecordingMap = {};
-const baseUrl = "http://localhost:8000"
+const baseUrl = window.location.origin
 
 async function showBotLoadingAnimation() {
   await sleep(200);
@@ -98,25 +98,33 @@ const populateBotResponse = async (userMessage) => {
       $("#file-upload").click();
     });
 
-    $("#file-upload").on("change", function () {
+    $("#file-upload").on("change", async function () {
       const file = this.files[0];
-      const reader = new FileReader();
 
-      reader.onload = async function (e) {
-        await showBotLoadingAnimation();
-        // Now send this data to /process-document endpoint
-        let response = await fetch(baseUrl + "/process-document", {
-          method: "POST",
-          headers: { Accept: "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify({ fileData: e.target.result }),
-        });
-        response = await response.json();
-        console.log('/process-document', response)
-        renderBotResponse(response, '')
-      };
+      await showBotLoadingAnimation();
 
-      reader.readAsDataURL(file);
+      // Create a new FormData instance
+      const formData = new FormData();
+
+      // Append the file to the FormData instance
+      formData.append('file', file);
+
+      // Now send this data to /process-document endpoint
+      let response = await fetch(baseUrl + "/process-document", {
+        method: "POST",
+        headers: { Accept: "application/json" }, // "Content-Type" should not be explicitly set here, the browser will automatically set it to "multipart/form-data"
+        body: formData, // send the FormData instance as the body
+      });
+
+      if (response.status !== 400) {
+           document.querySelector('#upload-button').disabled = true;
+      }
+
+      response = await response.json();
+      console.log('/process-document', response)
+      renderBotResponse(response, '')
     });
+
 
     isFirstMessage = false; // after the first message, set this to false
   }
@@ -177,6 +185,8 @@ $(document).ready(function () {
 
       // Reset isFirstMessage flag
       isFirstMessage = true;
+
+      document.querySelector('#upload-button').disabled = false;
 
       // Start over
       populateBotResponse();
