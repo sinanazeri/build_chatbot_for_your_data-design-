@@ -1,5 +1,6 @@
 import os
 
+# Import necessary modules from langchain
 from langchain import OpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.embeddings import OpenAIEmbeddings
@@ -8,44 +9,49 @@ from dotenv import load_dotenv
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
 
+# Load environment variables
 load_dotenv()
+
+# Initialize global variables
 conversation_retrieval_chain = None
 chat_history = []
-
 llm = None
 llm_embeddings = None
 
-
-# Initialize the llm and return the model with its embeddings
+# Function to initialize the language model and its embeddings
 def init_llm():
-    # Make sure to set the relevant api key in the environment if you are using a api based model like ones from openai (OPENAI_API_KEY)
     global llm, llm_embeddings
-    llm = OpenAI()
+    # Initialize the language model with the OpenAI API key
+    llm = OpenAI(model_name="text-davinci-003", openai_api_key="YOUR API KEY")
+    # Initialize the embeddings for the language model
     llm_embeddings = OpenAIEmbeddings()
 
-
+# Function to process a PDF document
 def process_document(document_path):
     global conversation_retrieval_chain, llm, llm_embeddings
-
+    # Load the document
     loader = PyPDFLoader(document_path)
     documents = loader.load()
-
+    # Split the document into chunks
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     texts = text_splitter.split_documents(documents)
-    # create a vectorestore to use as the index
+    # Create a vector store from the document chunks
     db = Chroma.from_documents(texts, llm_embeddings)
-    # expose this index in a retriever interface
+    # Create a retriever interface from the vector store
     retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 2})
-    # create a chain to answer questions
+    # Create a conversational retrieval chain from the language model and the retriever
     conversation_retrieval_chain = ConversationalRetrievalChain.from_llm(llm, retriever)
 
-
+# Function to process a user prompt
 def process_prompt(prompt):
     global conversation_retrieval_chain
     global chat_history
+    # Generate a response to the user's prompt
     result = conversation_retrieval_chain({"question": prompt, "chat_history": chat_history})
+    # Update the chat history
     chat_history.append((prompt, result["answer"]))
+    # Return the model's response
     return result['answer']
 
-
+# Initialize the language model
 init_llm()
