@@ -22,7 +22,9 @@ llm_embeddings = None
 def init_llm():
     global llm, llm_embeddings
     # Initialize the language model with the OpenAI API key
-    llm = OpenAI(model_name="text-davinci-003", openai_api_key="YOUR API KEY")
+    openai_api_key = "YOUR API KEY"
+    os.environ["OPENAI_API_KEY"] = openai_api_key
+    llm = OpenAI(model_name="text-davinci-003")
     # Initialize the embeddings for the language model
     llm_embeddings = OpenAIEmbeddings()
 
