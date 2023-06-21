@@ -48,12 +48,9 @@ def process_document(document_path):
 def process_prompt(prompt):
     global conversation_retrieval_chain
     global chat_history
-    # Generate a response to the user's prompt
-    result = conversation_retrieval_chain({"question": prompt, "chat_history": chat_history})
-    # Update the chat history
-    chat_history.append((prompt, result["answer"]))
-    # Return the model's response
-    return result['answer']
+    # TODO: Pass the prompt and the chat history to the conversation_retrieval_chain object
+    # TODO: Append the prompt and the bot's response to the chat history
+    # TODO: Return the bot's response
 
 # Initialize the language model
 init_llm()
