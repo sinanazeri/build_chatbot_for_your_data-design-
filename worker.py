@@ -24,9 +24,8 @@ def init_llm():
     # Initialize the language model with the OpenAI API key
     # ---> TODO: write your code here <----
     
-    llm = OpenAI(model_name="text-davinci-003")
     # Initialize the embeddings for the language model
-    llm_embeddings = OpenAIEmbeddings()
+    llm_embeddings = OpenAIEmbeddings(openai_api_key="YOUR API KEY")
 
 # Function to process a PDF document
 def process_document(document_path):
