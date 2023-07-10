@@ -22,8 +22,8 @@ llm_embeddings = None
 def init_llm():
     global llm, llm_embeddings
     # Initialize the language model with the OpenAI API key
-    openai_api_key = "YOUR API KEY"
-    os.environ["OPENAI_API_KEY"] = openai_api_key
+    # ---> TODO: write your code here <----
+    
     llm = OpenAI(model_name="text-davinci-003")
     # Initialize the embeddings for the language model
     llm_embeddings = OpenAIEmbeddings()
@@ -32,7 +32,8 @@ def init_llm():
 def process_document(document_path):
     global conversation_retrieval_chain, llm, llm_embeddings
     # Load the document
-    loader = PyPDFLoader(document_path)
+    # ---> TODO: write your code here <---
+    
     documents = loader.load()
     # Split the document into chunks
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
@@ -48,9 +49,12 @@ def process_document(document_path):
 def process_prompt(prompt):
     global conversation_retrieval_chain
     global chat_history
-    # TODO: Pass the prompt and the chat history to the conversation_retrieval_chain object
-    # TODO: Append the prompt and the bot's response to the chat history
-    # TODO: Return the bot's response
+    # Pass the prompt and the chat history to the conversation_retrieval_chain object
+    result = conversation_retrieval_chain({"question": prompt, "chat_history": chat_history})
+    # ---> TODO: Append the prompt and the bot's response to the chat history <--
+
+    # Return the model's response
+    return result['answer']
 
 # Initialize the language model
 init_llm()
