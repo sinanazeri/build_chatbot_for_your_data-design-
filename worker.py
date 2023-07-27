@@ -22,10 +22,11 @@ llm_embeddings = None
 def init_llm():
     global llm, llm_embeddings
     # Initialize the language model with the OpenAI API key
+    api_key="YOUR API KEY"
     # ---> TODO: write your code here <----
     
     # Initialize the embeddings for the language model
-    llm_embeddings = OpenAIEmbeddings(openai_api_key="YOUR API KEY")
+    llm_embeddings = OpenAIEmbeddings(openai_api_key = api_key)
 
 # Function to process a PDF document
 def process_document(document_path):
