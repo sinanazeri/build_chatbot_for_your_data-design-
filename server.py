@@ -39,7 +39,7 @@ def process_document_route():
 
     file = request.files['file']  # Extract the uploaded file from the request
 
-    file_path = 'documents/' + file.filename  # Define the path where the file will be saved
+    file_path = file.filename  # Define the path where the file will be saved
     file.save(file_path)  # Save the file
 
     worker.process_document(file_path)  # Process the document using the worker module
